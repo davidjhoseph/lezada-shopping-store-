@@ -1,18 +1,56 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+<div class="home">
+    <div class="cart"></div>
+    <top-nav></top-nav>
+    <div style=" margin-top: 103px;"></div>
+    <carousel></carousel>
+    <nps></nps>
+    <ban></ban>
+    <bottom></bottom>
+</div>
+
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import nav from './Topnav'
+import bottom from './Footer1'
+import carousel from './Carousel'
+import NPS from './NPS'
+import Banner from './Banner'
+import Cart from './Cart'
 export default {
-  name: 'home',
-  components: {
-    HelloWorld
-  }
+    components: {
+        topNav: nav,
+        bottom: bottom,
+        carousel: carousel,
+        nps: NPS,
+        ban: Banner,
+        cart: Cart
+    },
+    computed: {
+        cart() {
+            return this.$store.state.cart.items
+        },
+    }
 }
 </script>
+
+<style scoped lang="scss">
+* {
+    padding:0;
+    margin: 0;
+    font-family:  "Work Sans", sans-serif;
+    overflow: hidden;
+}
+.home{
+    position: relative;
+    height: 4150px;
+    // .cart{
+    //     position: absolute;
+    //     height: 100%;
+    //     width: 100%;
+    //     background-color: red;
+    // }
+}
+
+</style>
