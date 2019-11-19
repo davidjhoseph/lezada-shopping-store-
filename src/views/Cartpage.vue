@@ -15,14 +15,13 @@
                   >
                       <span>Home</span>
                   </router-link> /
-                    <router-link
-                      :to="{name:'cart',}"
-                      active-class="active"
-                      exact
-                      tag="span"
-                      
+                  <router-link
+                    :to="{name:'cart',}"
+                    active-class="active"
+                    exact
+                    tag="span"
                   >
-                      <span>Shopping Cart</span>
+                    <span>Shopping Cart</span>
                   </router-link> 
                 </span>
               </div>
@@ -66,7 +65,8 @@
                 </td>
                 <td>
                   <div class="price">
-                    ${{product.price}}.00
+                    <div class="mr-2" :class="{'slash': product.discount}">${{product.price}}.00</div>
+                    <div v-if="product.discount">${{product.price - (product.discount/100 * product.price)}}.00 </div>
                   </div>
                 </td>
                 <td>
@@ -108,9 +108,13 @@
                   <div class="col-4 cartTotaltitle">SUBTOTAL</div>
                   <div class="col-4 text-right cartTotalPrice">${{cartTotal}}</div>
                 </div>
+                <div class="row mt-3 justify-content-between">
+                  <div class="col-4 cartTotaltitle">DISCOUNT</div>
+                  <div class="col-4 text-right cartTotalPrice">${{discount(product)}}</div>
+                </div>
                 <div class="row mt-5 justify-content-between">
                   <div class="col-4 cartTotaltitle">TOTAL</div>
-                  <div class="col-4 text-right cartTotalPrice1">${{cartTotal}}</div>
+                  <div class="col-4 text-right cartTotalPrice1">${{cartTotal - discount(product)}}</div>
                 </div>
                 <div class="row">
                   <div class="col">
@@ -141,7 +145,7 @@ export default {
     },
     cartTotal() {
       return this.$store.getters.cartTotal
-    }
+    },
     
   },
   methods: {
@@ -149,6 +153,15 @@ export default {
       if(product.quantity>1){
           product.quantity--
       }
+    },
+    discount(product) {
+        let discount = 0;
+        this.cart.forEach(item=>{
+          if(item.discount){
+            discount+=(item.discount/100) * item.price
+          }
+        })
+        return discount
     },
     deleteProduct(product) {
       let item = Object.assign({}, product);
@@ -242,11 +255,15 @@ table{
       }
       .price{
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        flex-direction: row;
+        align-items: center;
         height:170px;
         color: #212529;
         font-weight: 600;
+        .slash{
+            text-decoration: line-through;
+            color: #aaaaaa;
+        }
       }
       .quantity{
         display: flex;
@@ -262,6 +279,7 @@ table{
         height:170px;
         color: #212529;
         font-weight: 600;
+        width: 40px;
       }
       .remove{
         display: flex;
