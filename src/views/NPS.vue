@@ -93,6 +93,7 @@ export default {
         font-size: 45px;
         font-weight: 400;
         color: #ccc;
+        margin-top: 100px;
         .tabs{
             div{
                 cursor: pointer;

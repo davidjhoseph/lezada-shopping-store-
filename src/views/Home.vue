@@ -44,7 +44,7 @@ export default {
 }
 .home{
     position: relative;
-    height: 4150px;
+    // height: 4150px;
     // .cart{
     //     position: absolute;
     //     height: 100%;
