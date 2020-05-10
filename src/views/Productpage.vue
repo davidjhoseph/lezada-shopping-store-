@@ -306,6 +306,11 @@ export default {
         },
         addToCart(product){
             this.$store.commit('addProductToCart', product)
+            // let toast = this.$toasted.show( product.name + " " + "has been added to cart", { 
+            // theme: "toasted-primary", 
+            // position: "bottom-right", 
+            // duration : 1500
+            // });
         },
         changeImage(product, img) {
             product.image = img

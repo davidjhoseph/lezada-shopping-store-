@@ -125,7 +125,7 @@
             </div>
           </div>
         </div>
-        <div v-else class="col-8 Text-center mt-5">
+        <div v-else class="col-8 no-product Text-center mt-5">
           Oops! there is currently no Item in your cart. Please scan through our products.
         </div>
       </div>
@@ -153,6 +153,10 @@ export default {
       if(product.quantity>1){
           product.quantity--
       }
+    },
+    updateCart(){
+
+
     },
     discount(product) {
         let discount = 0;
@@ -456,7 +460,8 @@ table{
     }
   }
 }
-
-
+.no-product{
+  height: 25vh;
+}
 
 </style>

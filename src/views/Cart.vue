@@ -157,4 +157,4 @@ import Cartbox from './Cartbox'
         100% {transform: translateX(0);}
     }
 }
-</style>
+</style> 
