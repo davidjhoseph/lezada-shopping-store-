@@ -1,19 +1,25 @@
 <template>
-    <div>
-        <top-nav></top-nav>
-        <router-view/>
-    </div>
+  <div>
+    <top-nav></top-nav>
+    <router-view />
+  </div>
 </template>
 <script>
-import Topnav from './views/Topnav'
+import Topnav from "./views/Topnav";
 export default {
-    components: {
-        topNav: Topnav
+  created: function() {
+    this.fetchProducts();
+  },
+  components: {
+    topNav: Topnav
+  },
+  methods: {
+    fetchProducts() {
+      this.$store.dispatch("getProducts");
     }
-
-}
+  }
+};
 </script>
 
 <style lang="scss">
-
 </style>

@@ -5,7 +5,7 @@ import router from "./router";
 import store from "./store";
 import "./assets/style.scss";
 import axios from "axios";
-Vue.use(axios);
+// Vue.use(axios);
 
 Vue.config.productionTip = false;
 Vue.use(toasted);

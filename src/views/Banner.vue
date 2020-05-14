@@ -26,24 +26,7 @@
 </template>
 
 <script>
-import axios from "axios";
-export default {
-  created: function() {
-    this.getTest();
-  },
-  methods: {
-    getTest() {
-      axios
-        .get("http://localhost:8000/test")
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-  }
-};
+export default {};
 </script>
 
 <style scoped lang="scss">

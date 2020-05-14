@@ -1,11 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import productlist from "./products";
+import axios from "axios";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    products: productlist.products,
+    products: [],
     viewCart: false,
     viewSaved: false,
     cart: {
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    getProducts(state, payload) {
+      state.products = payload.data;
+    },
     addToCart(state, payload) {
       let product = Object.assign({}, payload);
       let cart = state.cart.items;
@@ -105,7 +109,20 @@ export default new Vuex.Store({
       }
     },
   },
-  actions: {},
+  actions: {
+    getProducts(context) {
+      axios
+        .get("http://localhost:8000/api/products")
+        .then((response) => {
+          context.commit("getProducts", {
+            data: response.data,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
   getters: {
     cartTotal(state) {
       let total = 0;
@@ -120,9 +137,6 @@ export default new Vuex.Store({
         }
       });
       return total;
-    },
-    getProducts(state) {
-      axios.get("http://localhost:8000/products");
     },
   },
   modules: {},
