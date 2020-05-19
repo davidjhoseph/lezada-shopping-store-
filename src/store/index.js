@@ -20,6 +20,9 @@ export default new Vuex.Store({
     getProducts(state, payload) {
       state.products = payload.data;
     },
+    emptyCart(state) {
+      state.cart.items = [];
+    },
     addToCart(state, payload) {
       let product = Object.assign({}, payload);
       let cart = state.cart.items;
@@ -34,14 +37,11 @@ export default new Vuex.Store({
       if (!found) {
         product.quantity = 1;
         cart.push(product);
-        let toast = Vue.toasted.show(
-          product.name + " " + "has been added to cart",
-          {
-            theme: "toasted-primary",
-            position: "bottom-right",
-            duration: 1500,
-          }
-        );
+        let toast = Vue.toasted.show(product.name + " has been added to cart", {
+          theme: "toasted-primary",
+          position: "bottom-right",
+          duration: 1500,
+        });
       } else {
         cart.forEach((item) => {
           if (item.id === product.id) {
@@ -51,13 +51,7 @@ export default new Vuex.Store({
           }
         });
         let toast = Vue.toasted.show(
-          product.name +
-            " " +
-            "now has" +
-            " " +
-            quantity +
-            " " +
-            " items in the cart",
+          product.name + " now has" + " " + quantity + " items in the cart",
           {
             theme: "toasted-primary",
             position: "bottom-right",
@@ -110,17 +104,25 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    emptyCart(context) {
+      context.commit("emptyCart");
+    },
     getProducts(context) {
-      axios
-        .get("http://localhost:8000/api/products")
-        .then((response) => {
-          context.commit("getProducts", {
-            data: response.data,
+      return new Promise((resolve, reject) => {
+        axios
+          .get("http://localhost:8000/api/products")
+          .then((response) => {
+            context.commit("getProducts", {
+              data: response.data.data,
+            });
+
+            resolve();
+          })
+          .catch((err) => {
+            reject(er);
+            console.log(err);
           });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      });
     },
   },
   getters: {
