@@ -28,10 +28,10 @@
         </div>
         <div class="text-center">Please login using account detail below.</div>
         <div class="formBox">
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
+          <input type="email" placeholder="Email" v-model="email" />
+          <input type="password" placeholder="Password" v-model="password" />
           <div class="d-flex align-items-center justify-content-between">
-            <button>Sign in</button>
+            <button @click="submitForm()" :disabled="email === '' || password === ''">Sign in</button>
             <a href="#">Forgot your password?</a>
           </div>
           <router-link :to="{name:'register'}" tag="div">
@@ -46,10 +46,34 @@
 
 <script>
 import Footer from "./Footer1";
+import axios from "axios";
 
 export default {
+  data() {
+    return {
+      email: "",
+      password: ""
+    };
+  },
   components: {
     foot: Footer
+  },
+  methods: {
+    submitForm() {
+      axios
+        .post("http://localhost:8000/api/login", {
+          email: this.email,
+          password: this.password
+        })
+        .then(response => {
+          console.log(response.data);
+          this.email = "";
+          this.password = "";
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 };
 </script>
