@@ -80,7 +80,7 @@ export default {
     background-repeat: no-repeat;
     background-position: center;
     position: relative;
-
+    // transition: all 0.5 ease-in;
     .element-holder {
       position: absolute;
       top: 10px;
