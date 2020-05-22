@@ -59,6 +59,13 @@
 <script>
 import axios from "axios";
 export default {
+  beforeRouteEnter(to, from, next) {
+    var token = localStorage.getItem("token");
+    if (token === null) {
+      return next({ name: "login" });
+    }
+    next();
+  },
   data() {
     return {
       checkout: false,
@@ -69,6 +76,9 @@ export default {
   computed: {
     cartProducts() {
       return this.$store.state.cart.items;
+    },
+    user() {
+      return this.$store.loggedInUser;
     }
   },
   methods: {
@@ -76,11 +86,20 @@ export default {
       this.$router.go(-1);
     },
     submitOrder() {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      };
       axios
-        .post("http://localhost:8000/api/order", {
-          products: this.cartProducts,
-          address: this.address
-        })
+        .post(
+          "http://localhost:8000/api/order",
+          {
+            products: this.cartProducts,
+            address: this.address,
+            id: this.$store.state.loggedInUser.id
+          },
+          { headers: headers }
+        )
         .then(response => {
           console.log(response.data);
           this.checkout = true;

@@ -6,6 +6,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    isLoggedIn: false,
+    loggedInUser: null,
     products: [],
     viewCart: false,
     viewSaved: false,
@@ -19,6 +21,14 @@ export default new Vuex.Store({
   mutations: {
     getProducts(state, payload) {
       state.products = payload.data;
+    },
+    getToken(state, payload) {
+      localStorage.setItem("token", payload.token);
+      localStorage.setItem("user", payload.user);
+    },
+    getAuthenticatedUser(state, payload) {
+      state.isLoggedIn = true;
+      state.loggedInUser = payload.user;
     },
     emptyCart(state) {
       state.cart.items = [];
@@ -104,8 +114,17 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    getAuthenticatedUser(context, payload) {
+      context.commit("getAuthenticatedUser", payload);
+    },
     emptyCart(context) {
       context.commit("emptyCart");
+    },
+    getToken(context, payload) {
+      context.commit("getToken", {
+        token: payload.access_token,
+        user: JSON.stringify(payload.user),
+      });
     },
     getProducts(context) {
       return new Promise((resolve, reject) => {
@@ -119,7 +138,7 @@ export default new Vuex.Store({
             resolve();
           })
           .catch((err) => {
-            reject(er);
+            reject(err);
             console.log(err);
           });
       });

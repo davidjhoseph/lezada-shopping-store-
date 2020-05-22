@@ -77,7 +77,7 @@ export default {
     },
     saleProducts() {
       return this.$store.state.products.filter(product => {
-        return !product.isNew && !product.isPopular;
+        return product.isSale;
       });
     }
   },

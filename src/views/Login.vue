@@ -30,6 +30,7 @@
         <div class="formBox">
           <input type="email" placeholder="Email" v-model="email" />
           <input type="password" placeholder="Password" v-model="password" />
+          <div v-if="error" class="text-danger">Please try again</div>
           <div class="d-flex align-items-center justify-content-between">
             <button @click="submitForm()" :disabled="email === '' || password === ''">Sign in</button>
             <a href="#">Forgot your password?</a>
@@ -49,10 +50,18 @@ import Footer from "./Footer1";
 import axios from "axios";
 
 export default {
+  beforeRouteEnter(to, from, next) {
+    var token = localStorage.getItem("token");
+    if (token !== null) {
+      return next({ name: "register" });
+    }
+    next();
+  },
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      error: false
     };
   },
   components: {
@@ -66,12 +75,15 @@ export default {
           password: this.password
         })
         .then(response => {
-          console.log(response.data);
           this.email = "";
           this.password = "";
+          this.$store.dispatch("getToken", response.data);
+          this.$router.push({ name: "home" });
+          console.log(response.data);
         })
         .catch(err => {
-          console.log(err);
+          this.password = "";
+          this.error = true;
         });
     }
   }

@@ -9,6 +9,16 @@ import Topnav from "./views/Topnav";
 export default {
   created: function() {
     this.fetchProducts();
+    // var user = JSON.parse(localStorage.getItem("user"));
+    // console.log(user.data);
+    if (localStorage.getItem("user") !== null) {
+      var user = JSON.parse(localStorage.getItem("user"));
+      this.$store.dispatch("getAuthenticatedUser", {
+        user: user
+      });
+    }
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("user");
   },
   components: {
     topNav: Topnav
