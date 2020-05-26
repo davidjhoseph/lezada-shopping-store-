@@ -2,9 +2,11 @@ import Vue from "vue";
 import Vuex from "vuex";
 import productlist from "./products";
 import axios from "axios";
+import VuexPersistence from "vuex-persist";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  plugins: [new VuexPersistence().plugin],
   state: {
     isLoggedIn: false,
     loggedInUser: null,
@@ -134,7 +136,6 @@ export default new Vuex.Store({
             context.commit("getProducts", {
               data: response.data.data,
             });
-
             resolve();
           })
           .catch((err) => {

@@ -26,7 +26,8 @@
     </div>
     <div class="prod">
       <div class="container border-bottom" style="padding-bottom: 100px;">
-        <div class="row">
+        <div v-if="products.length<1">Loading...</div>
+        <div v-else class="row">
           <div class="col-md-6">
             <div class="pic" :style="{'background-image': 'url(' + product.image + ')'}">
               <div class="icons">
@@ -44,9 +45,9 @@
                 :style="{'background-image': 'url(https://demo.hasthemes.com/lezada-preview/lezada/assets/images/products/furniture-7-1-600x800.jpg)'}"
               ></div>
               <div
-                @click="changeImage(product,product.hoveredImage)"
+                @click="changeImage(product,product.hoveredimage)"
                 class="image"
-                :style="{'background-image': 'url(' + product.hoveredImage + ')'}"
+                :style="{'background-image': 'url(' + product.hoveredimage + ')'}"
               ></div>
               <div
                 @click="changeImage(product,'https://demo.hasthemes.com/lezada-preview/lezada/assets/images/products/furniture-5-1-600x800.jpg')"
@@ -309,7 +310,7 @@ export default {
     rev: ReviewStore,
     foot: Footer
   },
-  mounted() {
+  created() {
     this.productId = this.$route.params.productId;
     this.initialize();
   },

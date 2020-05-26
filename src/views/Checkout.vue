@@ -1,10 +1,9 @@
 <template>
   <div class="checkout">
     <div v-if="!checkout">
-      <div
-        v-if="cartProducts.length<1"
-        class="text-danger"
-      >Sorry there is nothing to checkout, try adding some items to your cart!</div>
+      <div v-if="cartProducts.length < 1" class="text-danger">
+        Sorry there is nothing to checkout, try adding some items to your cart!
+      </div>
       <div v-else>
         <div @click="goBack()">Back</div>
         <div class="container">
@@ -26,27 +25,31 @@
           <div v-for="product in cartProducts" :key="product.id">
             <div class="row justify-content-between mb-2">
               <div class="col-3">
-                <div>{{product.name}}</div>
+                <div>{{ product.name }}</div>
               </div>
               <div class="col-3">
-                <div>{{product.price}}</div>
+                <div>{{ product.price }}</div>
               </div>
               <div class="col-3">
                 <div class="d-flex align-items-center">
                   <div>X</div>
-                  <div>{{product.quantity}}</div>
+                  <div>{{ product.quantity }}</div>
                 </div>
               </div>
               <div class="col-3">
-                <div>{{product.quantity*product.price}}</div>
+                <div>{{ product.quantity * product.price }}</div>
               </div>
             </div>
           </div>
           <div v-if="!addressInfo" class="text-center">
-            <button @click="addressInfo=true">Continue</button>
+            <button @click="addressInfo = true">Continue</button>
           </div>
           <div v-if="addressInfo" class="text-center showAddress mt-2">
-            <input type="text" v-model="address" placeholder="Please insert your address!" />
+            <input
+              type="text"
+              v-model="address"
+              placeholder="Please insert your address!"
+            />
             <button class="order" @click="submitOrder()">Complete Order</button>
           </div>
         </div>
@@ -70,7 +73,7 @@ export default {
     return {
       checkout: false,
       addressInfo: false,
-      address: ""
+      address: "",
     };
   },
   computed: {
@@ -79,16 +82,45 @@ export default {
     },
     user() {
       return this.$store.loggedInUser;
-    }
+    },
   },
   methods: {
+    pay() {
+      let handler = PaystackPop.setup({
+        key: "pk_test_20f4dc6d1a2dd97132563a1f186cc8f25f7bc2c0",
+        email: "customer@email.com",
+        amount: 10000,
+        currency: "NGN",
+        ref: "" + Math.floor(Math.random() * 1000000000 + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+        metadata: {
+          custom_fields: [
+            {
+              display_name: "Mobile Number",
+              variable_name: "mobile_number",
+              value: "+2348012345678",
+            },
+          ],
+        },
+        callback: this.onPaymenySuccess,
+        onClose: this.onClose,
+      });
+      handler.openIframe();
+    },
+    onClose() {
+      alert("window closed");
+    },
+    onPaymenySuccess(response) {
+      alert("success. transaction ref is " + response.reference);
+    },
     goBack() {
       this.$router.go(-1);
     },
     submitOrder() {
+      this.pay();
+      return;
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       };
       axios
         .post(
@@ -96,20 +128,20 @@ export default {
           {
             products: this.cartProducts,
             address: this.address,
-            id: this.$store.state.loggedInUser.id
+            id: this.$store.state.loggedInUser.id,
           },
           { headers: headers }
         )
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
           this.checkout = true;
           this.$store.dispatch("emptyCart");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
