@@ -1,9 +1,10 @@
 <template>
   <div class="checkout">
     <div v-if="!checkout">
-      <div v-if="cartProducts.length < 1" class="text-danger">
-        Sorry there is nothing to checkout, try adding some items to your cart!
-      </div>
+      <div
+        v-if="cartProducts.length < 1"
+        class="text-danger"
+      >Sorry there is nothing to checkout, try adding some items to your cart!</div>
       <div v-else>
         <div @click="goBack()">Back</div>
         <div class="container">
@@ -45,11 +46,7 @@
             <button @click="addressInfo = true">Continue</button>
           </div>
           <div v-if="addressInfo" class="text-center showAddress mt-2">
-            <input
-              type="text"
-              v-model="address"
-              placeholder="Please insert your address!"
-            />
+            <input type="text" v-model="address" placeholder="Please insert your address!" />
             <button class="order" @click="submitOrder()">Complete Order</button>
           </div>
         </div>
@@ -73,7 +70,7 @@ export default {
     return {
       checkout: false,
       addressInfo: false,
-      address: "",
+      address: ""
     };
   },
   computed: {
@@ -82,13 +79,13 @@ export default {
     },
     user() {
       return this.$store.loggedInUser;
-    },
+    }
   },
   methods: {
     pay() {
       let handler = PaystackPop.setup({
         key: "pk_test_20f4dc6d1a2dd97132563a1f186cc8f25f7bc2c0",
-        email: "customer@email.com",
+        email: JSON.parse(localStorage.user).email,
         amount: 10000,
         currency: "NGN",
         ref: "" + Math.floor(Math.random() * 1000000000 + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
@@ -97,12 +94,12 @@ export default {
             {
               display_name: "Mobile Number",
               variable_name: "mobile_number",
-              value: "+2348012345678",
-            },
-          ],
+              value: "+2348096487616"
+            }
+          ]
         },
         callback: this.onPaymenySuccess,
-        onClose: this.onClose,
+        onClose: this.onClose
       });
       handler.openIframe();
     },
@@ -116,11 +113,9 @@ export default {
       this.$router.go(-1);
     },
     submitOrder() {
-      this.pay();
-      return;
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`
       };
       axios
         .post(
@@ -128,20 +123,21 @@ export default {
           {
             products: this.cartProducts,
             address: this.address,
-            id: this.$store.state.loggedInUser.id,
+            id: this.$store.state.loggedInUser.id
           },
           { headers: headers }
         )
-        .then((response) => {
+        .then(response => {
           console.log(response.data);
           this.checkout = true;
           this.$store.dispatch("emptyCart");
+          this.pay();
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
